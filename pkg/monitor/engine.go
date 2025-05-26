@@ -22,6 +22,7 @@ func (e *Engine) Run() {
 				log.Printf("Error sending webhook: %v", err)
 				return
 			}
+			log.Println("Webhook sent successfully!")
 		}
 
 		e.startTime = time.Now().Format(time.RFC3339)
