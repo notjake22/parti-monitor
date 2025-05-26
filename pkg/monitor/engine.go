@@ -14,7 +14,7 @@ func (e *Engine) Run() {
 		log.Fatalf("Error checking public API: %v", err)
 		return
 	}
-	
+
 	if e.state != res {
 		if res {
 			err = discord.SendWebhook(e.webhookURL)
@@ -28,6 +28,6 @@ func (e *Engine) Run() {
 		e.state = res
 	}
 
-	time.Sleep(60 * time.Second)
+	time.Sleep(30 * time.Second)
 	e.Run()
 }
