@@ -8,7 +8,7 @@ import (
 )
 
 func (e *Engine) Run() {
-	log.Println("Starting Parti Monitor Engine...")
+	log.Println("Running Parti Monitor Engine...")
 	res, err := parti.CheckPublicApi("465731")
 	if err != nil {
 		log.Fatalf("Error checking public API: %v", err)
@@ -17,15 +17,23 @@ func (e *Engine) Run() {
 
 	if e.state != res {
 		if res {
+			e.startTime = time.Now().Format(time.RFC3339)
 			err = discord.SendWebhook(e.webhookURL)
 			if err != nil {
 				log.Printf("Error sending webhook: %v", err)
 				return
 			}
-			log.Println("Webhook sent successfully!")
+			log.Println("Start webhook sent successfully!")
+		} else {
+			err = discord.SendEndWebhook(e.webhookURL, e.startTime, time.Now().Format(time.RFC3339))
+			if err != nil {
+				log.Printf("Error sending end webhook: %v", err)
+				return
+			}
+			e.startTime = ""
+			log.Println("End webhook sent successfully!")
 		}
 
-		e.startTime = time.Now().Format(time.RFC3339)
 		e.state = res
 	}
 
